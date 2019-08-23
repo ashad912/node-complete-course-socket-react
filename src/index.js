@@ -91,7 +91,7 @@ app.get('/api', (req, res) => {
 
 //listen for reqs
 
-app.listen(process.env.port || 4000, ()=>{ //process.env.port <- listening to setup hosting variable
+app.listen(process.env.PORT || 4000, ()=>{ //process.env.port <- listening to setup hosting variable
     console.log('now listenin for reqs')
 })
 
