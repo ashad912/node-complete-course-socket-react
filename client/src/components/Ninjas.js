@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import  { Link } from 'react-router-dom'
 
 
 class Ninjas extends Component{
@@ -24,6 +25,7 @@ class Ninjas extends Component{
 
         //native method, expected promise
         fetch('/api/ninjas?lng='+ lng + '&lat=' + lat).then((data)=>{
+            console.log(data)
             if(!data.ok){
                 throw Error(data)
             }
@@ -76,6 +78,7 @@ class Ninjas extends Component{
             </div>
             
             <div id="ninja-container">
+            <Link to="/login" className="button">Login</Link>
                 <form id="search" onSubmit={this.handleSubmit}>
                     <label>Enter your latitude:</label>
                     <input type="text" ref="lat" placeholder="latitude" required />
@@ -84,7 +87,7 @@ class Ninjas extends Component{
                     <input type="submit" value="Find Ninjas" />
                 </form>
                 <ul>{content}</ul>
-        </div> 
+            </div> 
         </React.Fragment> 
         )
     }

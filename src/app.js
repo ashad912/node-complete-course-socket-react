@@ -8,6 +8,7 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import path from 'path'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 mongoose.Promise = global.Promise
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 //app.use(express.static('public')) //get the resources
 
 app.use(bodyParser.json()) //going to have access to json mssg
+app.use(cookieParser())
 
 
 //ORDER IS IMPORTANT!!!

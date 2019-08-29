@@ -4,7 +4,9 @@ import { Ninja } from '../models/ninja'
 export const auth = async (req, res, next) => {
     //console.log('auth middleware')
     try{
-        const token = req.header('Authorization').replace('Bearer ', '')
+        console.log(req.cook)
+        //const token = req.header('Authorization').replace('Bearer ', '')
+        const token = req.cookies.token || req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const ninja = await Ninja.findOne({_id: decoded._id, 'tokens.token': token}) //finding proper user with proper token
 

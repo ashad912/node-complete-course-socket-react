@@ -104,10 +104,11 @@ router.post('/ninjas/login', async (req, res) => {
     try {
         const ninja = await Ninja.findByCredentials(req.body.email, req.body.password)
         const token = await ninja.generateAuthToken() //on instancegenerateAuthToken
-        res.send({
+        /*res.send({
             ninja: ninja,
             token: token
-        })
+        })*/
+        res.cookie('token', token, { httpOnly: true }).sendStatus(200);
     } catch (e) {
         res.status(400).send(e)
     }
