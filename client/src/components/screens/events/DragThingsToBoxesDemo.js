@@ -100,7 +100,7 @@ export default class DragThingsToBoxesDemo extends React.Component {
       })
     })
 
-    socket.on('updateItems', (items) => {
+    /*socket.on('updateItems', (items) => {
       console.log('getUpdatedList')
       this.setState({
         missionItems: items
@@ -108,6 +108,27 @@ export default class DragThingsToBoxesDemo extends React.Component {
         this.setState({
           updating: false
         })
+      })
+    })*/
+
+
+    socket.on('addItem', (item) => {
+      console.log('addItemSocketOnClient')
+
+      const items = [...this.state.missionItems, item]
+      this.setState({
+        missionItems: items
+      })
+    })
+
+    socket.on('deleteItem', (id) => {
+      console.log('deleteItemSocketOnClient')
+
+      let items = this.state.missionItems.filter((item) => {
+        return item._id !== id
+      })
+      this.setState({
+        missionItems: items
       })
     })
     
@@ -135,7 +156,7 @@ export default class DragThingsToBoxesDemo extends React.Component {
 
   }
 
-  updateUserItems = (items) => {
+  /*updateUserItems = (items) => {
     this.setState({
       userItems: items
     })
@@ -157,6 +178,33 @@ export default class DragThingsToBoxesDemo extends React.Component {
     }
     
     
+  }*/
+
+
+
+  addMissionItem = (item) => {
+    socket.emit('addItem', item)
+  }
+
+  deleteMissionItem = (id) => {
+    socket.emit('deleteItem', id)
+  }
+
+  addUserItem = (item) => {
+    const items = [...this.state.userItems, item]
+    this.setState({
+      userItems: items
+    })
+  }
+
+  deleteUserItem = (id) => {
+    let items = this.state.userItems.filter((item) => {
+      return item._id !== id
+    })
+
+    this.setState({
+      userItems: items
+    })
   }
   render() {
     return (
@@ -168,8 +216,8 @@ export default class DragThingsToBoxesDemo extends React.Component {
         <p>SocketIO: {this.state.data}</p>
         <div onClick={this.handleClick}>Increment</div>
         <div className="drag_things_to_boxes">
-            <Box targetKey="box" items={this.state.userItems} updateItems={this.updateUserItems} boxname='user'/>
-            <Box targetKey="box" items={this.state.missionItems} updateItems={this.updateMissionItems}  boxname='mission' />
+            <Box targetKey="box" items={this.state.userItems} addItem={this.addUserItem} deleteItem={this.deleteUserItem} boxname='user'/>
+            <Box targetKey="box" items={this.state.missionItems} addItem={this.addMissionItem} deleteItem={this.deleteMissionItem} boxname='mission' />
         </div>
       </React.Fragment>
     )

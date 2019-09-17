@@ -23,5 +23,13 @@ io.of('/dnd').on('connection', (socket) => { //each client has own socket
         io.of('dnd').emit('updateItems', items) // 'sockets' - all sockets connected ll see it
     })
 
+    socket.on('addItem', (item) => {
+        io.of('dnd').emit('addItem', item)
+    })
+
+    socket.on('deleteItem', (id) => {
+        io.of('dnd').emit('deleteItem', id)
+    })
+
     socket.on("disconnect", () => console.log("Client disconnected"));
 })

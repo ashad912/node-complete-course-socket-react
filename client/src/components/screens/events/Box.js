@@ -21,16 +21,19 @@ export default class Box extends React.Component {
     handleDrop = (e) => {
       console.log('drop', this.props.boxname)
       const item = e.dragData
+      this.props.addItem(item)
       //send new item to backend, join boxname to path
-      const items = [...this.props.items, item]
+      //const items = [...this.props.items, item]
 
-      this.props.updateItems(items)
+      //this.props.updateItems(items)
       
       //e.containerElem.style.visibility="hidden";
     };
   
     kill = (id) => {
       console.log('kill', this.props.boxname)
+      this.props.deleteItem(id)
+      /*console.log('kill', this.props.boxname)
 
       //send id to backend - find item and delete reference from user eq - user is still item owner
       //ALSO add killing item reference to transaction array
@@ -49,7 +52,7 @@ export default class Box extends React.Component {
         items.splice(index, 1);
       }*/
 
-      this.props.updateItems(items)
+      //this.props.updateItems(items)
     };
 
   
