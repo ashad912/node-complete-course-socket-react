@@ -12,7 +12,7 @@ body{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #555;
-  background: #ff5252;
+  /*background: #ff5252;*/
   margin: 10px 30px;
 }
 #homepage{
@@ -94,7 +94,8 @@ li{
 }
 span{
   display: inline-block;
-  margin: 0 20px;
+  margin: 0 0px;
+  /*margin: 0 20px:*/
 }
 span.dist{
   color: green;

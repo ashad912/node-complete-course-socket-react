@@ -10,6 +10,7 @@ import path from 'path'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
+
 mongoose.Promise = global.Promise
 
 mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
@@ -53,4 +54,3 @@ app.use((err, req, res, next)=>{ //4 args, func designed to catch errs
     //console.log(err) //1 param, when error occured it can be showed
     res.status(422).send({error: err.message}) //status provides http code, bad prepared mssg
 })
-
