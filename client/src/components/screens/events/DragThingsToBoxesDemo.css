@@ -1,8 +1,7 @@
 .drag_things_to_boxes .component_box {
 	
 	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+
 
 }
 

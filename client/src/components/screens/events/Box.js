@@ -21,7 +21,7 @@ export default class Box extends React.Component {
     handleDrop = (e) => {
       console.log('drop', this.props.boxname)
       const item = e.dragData
-      this.props.addItem(item)
+      this.props.addItem(item, this.props.targetKey)
       //send new item to backend, join boxname to path
       //const items = [...this.props.items, item]
 
@@ -32,7 +32,7 @@ export default class Box extends React.Component {
   
     kill = (id) => {
       console.log('kill', this.props.boxname)
-      this.props.deleteItem(id)
+      this.props.deleteItem(id, this.props.targetKey)
       /*console.log('kill', this.props.boxname)
 
       //send id to backend - find item and delete reference from user eq - user is still item owner

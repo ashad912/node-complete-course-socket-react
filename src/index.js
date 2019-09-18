@@ -24,10 +24,12 @@ io.of('/dnd').on('connection', (socket) => { //each client has own socket
     })
 
     socket.on('addItem', (item) => {
+        console.log('add item server')
         io.of('dnd').emit('addItem', item)
     })
 
     socket.on('deleteItem', (id) => {
+        console.log('delete item server')
         io.of('dnd').emit('deleteItem', id)
     })
 

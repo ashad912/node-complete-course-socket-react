@@ -1,19 +1,20 @@
 import React from 'react';
 import Box from './Box';
 import './DragThingsToBoxesDemo.css';
-import io from "socket.io-client"
+import * as socket from '../../../socket'
+import uuid from 'uuid/v1'
+//import io from "socket.io-client"
 
-// const socket = io('http://127.0.0.1:4000', {
-//   path: '/dnd'
-// })
 
-const socket = io('http://localhost:4000/dnd')
+//const socket = io('http://localhost:4000/dnd')
 
+const userItemsName = 'userItems'
+const missionItemsName = 'missionItems'
 
 const createTempItemListUser = () => {
   return [
       {
-        _id: 1,
+        _id: uuid(),
         model: {
           id: 101,
           type: {
@@ -26,7 +27,7 @@ const createTempItemListUser = () => {
         owner: '35resf23'
       },
       {
-        _id: 2,
+        _id: uuid(),
         model: {
           id: 102,
           type: {
@@ -39,7 +40,20 @@ const createTempItemListUser = () => {
         owner: '35resf23'
       },
       {
-        _id: 3,
+        _id: uuid(),
+        model: {
+          id: 103,
+          type: {
+              id: 201,
+              type: 'amulet'
+          },
+          name: 'sapphire',
+          imgSrc: 'sapphire-amulet.png'
+      },
+        owner: '35resf23'
+      },
+      {
+        _id: uuid(),
         model: {
           id: 101,
           type: {
@@ -59,8 +73,8 @@ const createTempItemListUser = () => {
 const createTempItemListMission = () => {
   return [
     
-      {
-        _id: 4,
+      /*{
+        _id: uuid(),
         model: {
           id: 103,
           type: {
@@ -71,7 +85,7 @@ const createTempItemListMission = () => {
           imgSrc: 'sapphire-amulet.png'
       },
         owner: '35resf23'
-      },
+      },*/
 
   ]
 }
@@ -86,19 +100,29 @@ const backToEvents = (history) => {
 
 export default class DragThingsToBoxesDemo extends React.Component {
 
+
+
+
   state = {
-    userItems: createTempItemListUser(),
-    missionItems: createTempItemListMission(),
-    socketValue: 0
+    [userItemsName]: createTempItemListUser(),
+    [missionItemsName]: createTempItemListMission(),
+    //socketValue: 0
   }
  
   componentDidMount() {
-    socket.on('test', (data) => {
+    socket.addItemSubscribe((item) => {
+      this.addItemToState(item, missionItemsName)
+    })
+
+    socket.deleteItemSubscribe((id) => {
+      this.deleteItemFromState(id, missionItemsName)
+    })
+    /*socket.on('test', (data) => {
       console.log('socketing')
       this.setState({
         data: data
       })
-    })
+    })*/
 
     /*socket.on('updateItems', (items) => {
       console.log('getUpdatedList')
@@ -110,9 +134,9 @@ export default class DragThingsToBoxesDemo extends React.Component {
         })
       })
     })*/
+    
 
-
-    socket.on('addItem', (item) => {
+    /*socket.on('addItem', (item) => {
       console.log('addItemSocketOnClient')
 
       const items = [...this.state.missionItems, item]
@@ -130,7 +154,7 @@ export default class DragThingsToBoxesDemo extends React.Component {
       this.setState({
         missionItems: items
       })
-    })
+    })*/
     
     /*if(this.props.location.state && this.props.location.state.id != null){
       const id = this.props.location.state.id
@@ -147,63 +171,45 @@ export default class DragThingsToBoxesDemo extends React.Component {
   }
 
   handleClick = () => {
-    console.log('clicked')
+    /*console.log('clicked')
     this.setState({
       socketValue: this.state.socketValue + 1
     }, () => {
       socket.emit("test", this.state.socketValue)
-    })
+    })*/
 
   }
 
-  /*updateUserItems = (items) => {
-    this.setState({
-      userItems: items
-    })
-  }
-
-  updateMissionItems = (items) => {
-    if(!this.state.updating){
-      this.setState({
-        updating: true,
-        backup: this.state.missionItems
-      }, () => {
-        console.log('items update from', items)
-        socket.emit('updateItems', items)
-      })
-    }else{
-      setTimeout(() => { //Start the timer
-        this.updateMissionItems(this.state.backup)
-      }, 50)
-    }
-    
-    
-  }*/
 
 
 
   addMissionItem = (item) => {
-    socket.emit('addItem', item)
+    //socket.emit('addItem', item)
+    socket.addItemEmit(item)
   }
 
   deleteMissionItem = (id) => {
-    socket.emit('deleteItem', id)
+    //socket.emit('deleteItem', id)
+    socket.deleteItemEmit(id)
   }
 
-  addUserItem = (item) => {
-    const items = [...this.state.userItems, item]
+  addItemToState = (item, targetKey) => {
+    console.log(...this.state[targetKey])
+    const items = [...this.state[targetKey], item]
+    
     this.setState({
-      userItems: items
+      [targetKey]: items
     })
   }
 
-  deleteUserItem = (id) => {
-    let items = this.state.userItems.filter((item) => {
+  deleteItemFromState = (id, targetKey) => {
+    console.log(...this.state[targetKey])
+    let items = this.state[targetKey].filter((item) => {
       return item._id !== id
     })
 
     this.setState({
-      userItems: items
+      [targetKey]: items
     })
   }
   render() {
@@ -216,8 +222,8 @@ export default class DragThingsToBoxesDemo extends React.Component {
         <p>SocketIO: {this.state.data}</p>
         <div onClick={this.handleClick}>Increment</div>
         <div className="drag_things_to_boxes">
-            <Box targetKey="box" items={this.state.userItems} addItem={this.addUserItem} deleteItem={this.deleteUserItem} boxname='user'/>
-            <Box targetKey="box" items={this.state.missionItems} addItem={this.addMissionItem} deleteItem={this.deleteMissionItem} boxname='mission' />
+            <Box targetKey={userItemsName} items={this.state.userItems} addItem={this.addItemToState} deleteItem={this.deleteItemFromState} boxname='user'/>
+            <Box targetKey={missionItemsName} items={this.state.missionItems} addItem={this.addMissionItem} deleteItem={this.deleteMissionItem} boxname='mission' />
         </div>
       </React.Fragment>
     )
