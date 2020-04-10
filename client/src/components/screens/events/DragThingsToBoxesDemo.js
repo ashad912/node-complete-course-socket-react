@@ -3,7 +3,7 @@ import Box from './Box';
 import './DragThingsToBoxesDemo.css';
 import * as socket from '../../../socket'
 import uuid from 'uuid/v1'
-//import io from "socket.io-client"
+import Loading from '../../layout/Loading';
 
 
 //const socket = io('http://localhost:4000/dnd')
@@ -110,13 +110,7 @@ export default class DragThingsToBoxesDemo extends React.Component {
   }
  
   componentDidMount() {
-    socket.addItemSubscribe((item) => {
-      this.addItemToState(item, missionItemsName)
-    })
-
-    socket.deleteItemSubscribe((id) => {
-      this.deleteItemFromState(id, missionItemsName)
-    })
+    
     /*socket.on('test', (data) => {
       console.log('socketing')
       this.setState({
@@ -185,12 +179,12 @@ export default class DragThingsToBoxesDemo extends React.Component {
 
   addMissionItem = (item) => {
     //socket.emit('addItem', item)
-    socket.addItemEmit(item)
+    socket.addItemEmit(item, this.state.roomId)
   }
 
   deleteMissionItem = (id) => {
     //socket.emit('deleteItem', id)
-    socket.deleteItemEmit(id)
+    socket.deleteItemEmit(id, this.state.roomId)
   }
 
   addItemToState = (item, targetKey) => {
@@ -213,13 +207,17 @@ export default class DragThingsToBoxesDemo extends React.Component {
     })
   }
   render() {
+
+    if(!this.state.roomId){
+      return <Loading/>
+    }
     return (
       <React.Fragment>
         <div onClick={this.handleBack}>
           <p>Back</p>
           
         </div>
-        <p>SocketIO: {this.state.data}</p>
+        <p>SocketIO-RoomId: {this.state.roomId}</p>
         <div onClick={this.handleClick}>Increment</div>
         <div className="drag_things_to_boxes">
             <Box targetKey={userItemsName} items={this.state.userItems} addItem={this.addItemToState} deleteItem={this.deleteItemFromState} boxname='user'/>

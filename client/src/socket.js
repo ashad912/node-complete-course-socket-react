@@ -14,10 +14,24 @@ export const deleteItemSubscribe = (id) => {
     })
 }
 
-export const addItemEmit = (item) => {
-    socket.emit('addItem', item)
+export const joinRoomSubscribe = (roomId) => {
+    socket.on('joinRoom', roomId, () => {
+        return roomId
+    })
 }
 
-export const deleteItemEmit = (id) => {
-    socket.emit('deleteItem', id)
+export const addItemEmit = (item, roomId) => {
+    const data = {item: item, roomId: roomId}
+    console.log(data)
+    socket.emit('addItem', data)
+}
+
+export const deleteItemEmit = (id, roomId) => {
+    const data = {id: id, roomId: roomId}
+    console.log(data)
+    socket.emit('deleteItem', data)
+}
+
+export const joinRoomEmit = (roomId) => {
+    socket.emit('joinRoom', roomId)
 }
